@@ -1,3 +1,4 @@
+import SeatSelector from "@/app/components/SeatSelector";
 import { getMovieDetails } from "@/app/lib/tmdb";
 import { getImageUrl } from "@/app/lib/utils";
 
@@ -35,6 +36,7 @@ const Movie = async ({ params }: Props) => {
           </div>
         </div>
       </div>
+      <SeatSelector />
     </div>
   );
 };

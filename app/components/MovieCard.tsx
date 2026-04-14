@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { getImageUrl } from "../lib/utils";
-import { Movie } from "../lib/types";
+import { Movie } from "../types/movie";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
   return (

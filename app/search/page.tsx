@@ -1,4 +1,4 @@
-import { Movie } from "../lib/types";
+import { Movie } from "../types/movie";
 import MovieCard from "../components/MovieCard";
 
 interface Props {

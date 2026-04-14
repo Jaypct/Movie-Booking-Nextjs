@@ -1,6 +1,6 @@
 import { TMDB_BASE_URL, REGION } from "./constants";
 import { fetcher } from "./fetcher";
-import { Movie } from "./types";
+import { Movie } from "../types/movie";
 
 const API_KEY = process.env.TMDB_API_KEY;
 

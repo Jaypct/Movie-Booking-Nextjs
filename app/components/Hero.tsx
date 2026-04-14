@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Movie } from "../lib/types";
+import { Movie } from "../types/movie";
 import { formatDate, getImageUrl } from "../lib/utils";
 
 export default function Hero({ movieList }: { movieList: Movie[] }) {
