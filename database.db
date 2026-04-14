@@ -1,0 +1,98 @@
+1. Create a profiles table
+create table profiles (
+  id uuid references auth.users on delete cascade,
+  name text,
+  email text,
+  role text default 'user',
+  primary key (id)
+);
+
+
+2. Automatically insert user with default role
+
+Use a trigger when a user signs up:
+create function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.profiles (id, email, role)
+  values (new.id, new.email, 'user');
+  return new;
+end;
+$$ language plpgsql;
+
+create trigger on_auth_user_created
+after insert on auth.users
+for each row execute procedure public.handle_new_user();
+
+
+3. Update role manually (e.g., make admin)
+update profiles
+set role = 'admin'
+where email = 'user@example.com';
+
+
+4. Use Row Level Security (RLS)
+You can restrict access based on roles:
+create policy "Admins only"
+on some_table
+for select
+using (
+  (select role from profiles where id = auth.uid()) = 'admin'
+);
+
+
+🎬 Assumed table structure
+
+Let’s say your table looks like this:
+
+bookings (
+  id uuid primary key,
+  user_id uuid,   -- links to auth.users.id
+  movie_title text,
+  show_time timestamp,
+  seats int
+)
+
+👉 The key part is: user_id must match auth.uid()
+
+✅ Step-by-step setup
+1. Enable RLS
+alter table bookings enable row level security;
+
+2. Allow users to view ONLY their bookings
+create policy "Users can view their own bookings"
+on bookings
+for select
+using (auth.uid() = user_id);
+
+
+
+create function is_admin()
+returns boolean as $$
+  select (select role from profiles where id = auth.uid()) = 'admin';
+$$ language sql stable;
+
+
+-- SELECT
+create policy "Admins can read"
+on some_table
+for select
+using (is_admin());
+
+-- INSERT
+create policy "Admins can insert"
+on some_table
+for insert
+with check (is_admin());
+
+-- UPDATE
+create policy "Admins can update"
+on some_table
+for update
+using (is_admin());
+
+-- DELETE
+create policy "Admins can delete"
+on some_table
+for delete
+using (is_admin());
