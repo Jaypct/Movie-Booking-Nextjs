@@ -1,6 +1,6 @@
-import SeatSelector from "@/app/components/SeatSelector";
 import { getMovieDetails } from "@/app/lib/tmdb";
 import { getImageUrl } from "@/app/lib/utils";
+import Link from "next/link";
 
 interface Props {
   params: { id: string };
@@ -36,7 +36,14 @@ const Movie = async ({ params }: Props) => {
           </div>
         </div>
       </div>
-      <SeatSelector />
+      <Link
+        href={{
+          pathname: "/booking-tickets",
+          query: { movie_id: movie.id, movie_title: movie.title },
+        }}
+      >
+        <button>Book Tickets Here</button>
+      </Link>
     </div>
   );
 };

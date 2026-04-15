@@ -51,37 +51,40 @@ export const createBooking = async (formData: FormData) => {
   } = await supabase.auth.getUser();
   if (!user) return { error: "Unauthorized", data: null };
 
-  const bookingData: BookingInsert = {
-    movie_id: parseInt(formData.get("movie_id") as string),
-    movie_title: formData.get("movie_title") as string,
-    email: formData.get("email") as string,
-    seat: formData.get("seat") as string,
-  };
+  const movie_id = parseInt(formData.get("movie_id") as string);
+  const movie_title = formData.get("movie_title") as string;
+  const email = formData.get("email") as string;
+  const seatString = formData.get("seat") as string;
 
   //Validation
-  if (
-    !bookingData.movie_id ||
-    !bookingData.movie_title ||
-    !bookingData.email ||
-    !bookingData.seat
-  ) {
-    return { error: "All fields are required" };
+  if (!movie_id || !movie_title || !email) {
+    return { error: "All fields are required", data: null };
+  } else if (!seatString) {
+    return { error: "Please select at least one seat." };
   }
 
-  const { error } = await supabase.from("bookings").insert({
-    ...bookingData,
+  const seats = seatString.split(",");
+
+  const bookings = seats.map((seat) => ({
+    movie_id,
+    movie_title,
+    email,
+    seat: seat.trim(),
     user_id: user.id,
-  });
+  }));
+
+  const { error } = await supabase.from("bookings").insert(bookings);
 
   if (error) {
+    // Detect duplicate seat booking
+    if (error.message.includes("duplicate key")) {
+      return {
+        error: "This seat is already booked",
+      };
+    }
     return { error: error.message };
   }
 
   revalidatePath("/");
-  return {
-    data: null,
-    error: {
-      message: "duplicate key value violates unique constraint",
-    },
-  };
+  return { error: null };
 };
