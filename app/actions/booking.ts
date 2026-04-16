@@ -22,19 +22,19 @@ export const getBookings = async () => {
   return { error: null, data };
 };
 
-export const getBooking = async (id: string) => {
+export const getBooking = async () => {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
   if (!user) return { error: "Unauthorized", data: null };
 
   const { data, error } = await supabase
     .from("bookings")
     .select("*")
-    .eq("id", id)
-    .single();
+    .eq("user_id", user.id);
 
   if (error) {
     return { error: error.message, data: null };

@@ -28,13 +28,15 @@ export default async function RootLayout({
   const {
     data: { user },
   } = await supabase.auth.getUser();
+  const userMetadata = user?.user_metadata;
+  const userName = userMetadata?.name || "User";
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar isAuthenticated={!!user} />
+        <Navbar isAuthenticated={!!user} user_name={userName} />
         {children}
       </body>
     </html>

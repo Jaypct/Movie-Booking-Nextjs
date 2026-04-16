@@ -32,7 +32,7 @@ export default function Hero({ movieList }: { movieList: Movie[] }) {
         />
 
         {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/50 to-transparent pointer-events-none -z-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent pointer-events-none -z-10" />
         <div className="absolute z-10 p-10 max-w-xl bottom-0">
           <h1 className="text-4xl font-bold mb-4">{movie.title}</h1>
           <div className="flex items-center gap-3 text-sm text-gray-300 mb-3">

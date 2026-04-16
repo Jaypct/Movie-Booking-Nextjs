@@ -10,29 +10,30 @@ export default async function Page() {
   ]);
 
   return (
-    <div className="container mx-auto mt-20 space-y-10">
+    <div className=" space-y-10">
       {/* Hero Section */}
       <div>
         <Hero movieList={nowPlaying} />
       </div>
-
-      {/* 🎬 NOW PLAYING */}
-      <div>
-        <h1 className="text-2xl font-bold mb-4">Now Playing 🎬</h1>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {nowPlaying.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
+      <div className="container mx-auto">
+        {/* 🎬 NOW PLAYING */}
+        <div>
+          <h1 className="text-2xl font-bold mb-4">Now Playing 🎬</h1>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {nowPlaying.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* 🗓️ UPCOMING */}
-      <div>
-        <h1 className="text-2xl font-bold mb-4">Upcoming 🍿</h1>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {upcoming.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))}
+        {/* 🗓️ UPCOMING */}
+        <div>
+          <h1 className="text-2xl font-bold mb-4">Upcoming 🍿</h1>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {upcoming.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
