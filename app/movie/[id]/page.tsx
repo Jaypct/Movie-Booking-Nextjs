@@ -10,6 +10,10 @@ const Movie = async ({ params }: Props) => {
   //
   const { id } = await params;
   const movie = await getMovieDetails(id);
+  const now = Date.now();
+  const releaseDate = new Date(movie.release_date).getTime();
+
+  const isUpcoming = now > releaseDate;
 
   return (
     <div className="relative mt-20 min-h-screen overflow-hidden text-white">
@@ -42,7 +46,7 @@ const Movie = async ({ params }: Props) => {
           query: { movie_id: movie.id, movie_title: movie.title },
         }}
       >
-        <button>Book Tickets Here</button>
+        {isUpcoming ? <button>Book Tickets Here</button> : null}
       </Link>
     </div>
   );

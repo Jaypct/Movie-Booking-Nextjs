@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { getImageUrl } from "../lib/utils";
+import { formatYearDate, getImageUrl } from "../lib/utils";
 import { Movie } from "../types/movie";
 
 export default function MovieCard({ movie }: { movie: Movie }) {
@@ -16,7 +16,9 @@ export default function MovieCard({ movie }: { movie: Movie }) {
 
         <div className="p-3">
           <h3 className="font-bold text-sm">{movie.title}</h3>
-          <p className="text-xs text-gray-400">{movie.release_date}</p>
+          <p className="text-xs text-gray-400">
+            {formatYearDate(movie.release_date)}
+          </p>
         </div>
       </Link>
     </div>
