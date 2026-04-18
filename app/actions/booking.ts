@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "../lib/supabase/server";
-import { BookingInsert } from "../types/database";
 
 export const getBookings = async () => {
   const supabase = await createClient();
@@ -34,7 +33,8 @@ export const getBooking = async () => {
   const { data, error } = await supabase
     .from("bookings")
     .select("*")
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
 
   if (error) {
     return { error: error.message, data: null };
@@ -86,5 +86,7 @@ export const createBooking = async (formData: FormData) => {
   }
 
   revalidatePath("/");
-  return { error: null };
+  revalidatePath("/booked-tickets");
+  revalidatePath("/booking-tickets");
+  return { error: null, data: { seatsBooked: seats.length } };
 };
