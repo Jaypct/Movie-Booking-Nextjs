@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { createClient } from "./lib/supabase/server";
 import Navbar from "./components/Navbar";
+import { getUserData } from "./actions/auth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,19 +24,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const userMetadata = user?.user_metadata;
-  const userName = userMetadata?.name || "User";
+  const { isAuthenticated, userName, role } = await getUserData();
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Navbar isAuthenticated={!!user} user_name={userName} />
+        <Navbar
+          isAuthenticated={isAuthenticated}
+          user_name={userName}
+          role={role}
+        />
         {children}
       </body>
     </html>

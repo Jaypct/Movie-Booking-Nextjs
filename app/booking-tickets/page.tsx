@@ -5,7 +5,9 @@ import Link from "next/link";
 import { getMovieDetails } from "../lib/tmdb";
 import { formatLongDate, getImageUrl } from "../lib/utils";
 
-export default async function BookingPage(props: PageProps<"/booking-tickets">) {
+export default async function BookingPage(
+  props: PageProps<"/booking-tickets">,
+) {
   const searchParams = await props.searchParams;
   const movieId =
     typeof searchParams.movie_id === "string" ? searchParams.movie_id : null;

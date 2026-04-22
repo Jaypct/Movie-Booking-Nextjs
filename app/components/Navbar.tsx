@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 
 import {
   Clapperboard,
@@ -12,13 +12,14 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signout } from "../actions/auth";
 
 type NavbarProps = {
   isAuthenticated: boolean;
   user_name?: string;
+  role?: string;
 };
 
 const navItems = [
@@ -48,7 +49,11 @@ const navItems = [
   },
 ];
 
-export default function Navbar({ isAuthenticated, user_name }: NavbarProps) {
+export default function Navbar({
+  isAuthenticated,
+  user_name,
+  role,
+}: NavbarProps) {
   const [query, setQuery] = useState("");
   const [menu, setMenu] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -309,6 +314,10 @@ export default function Navbar({ isAuthenticated, user_name }: NavbarProps) {
                   </Link>
                 );
               })}
+
+              {role === "admin" ? (
+                <Link href={"/admin-dashboard"}>Admin</Link>
+              ) : null}
 
               {isAuthenticated ? (
                 <>

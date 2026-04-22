@@ -1,4 +1,5 @@
 export type ProfileRoles = "user" | "admin";
+export type BookingStatus = "active" | "used" | "expired";
 
 export interface Booking {
   id: string;
@@ -8,6 +9,12 @@ export interface Booking {
   email: string;
   seat: string;
   created_at: string;
+  schedules?: {
+    show_date?: string;
+    show_time?: string;
+  } | null;
+  qr_token: string;
+  status: BookingStatus;
 }
 
 export interface BookingInsert {
@@ -15,6 +22,8 @@ export interface BookingInsert {
   movie_title: string;
   email: string;
   seat: string;
+  date: Date;
+  time: string;
 }
 
 export interface profiles {
