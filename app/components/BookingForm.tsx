@@ -25,6 +25,7 @@ const BookingForm = ({ movieId, movieTitle }: BookingFormProps) => {
   const [message, setMessage] = useState("");
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
   const [didSucceed, setDidSucceed] = useState(false);
+  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
 
   const totalPrice = selectedSeats.length * pricePerSeat;
 
@@ -76,9 +77,7 @@ const BookingForm = ({ movieId, movieTitle }: BookingFormProps) => {
           <p className="text-xs uppercase tracking-[0.24em] text-white/45">
             Checkout details
           </p>
-          <h2 className="mt-2 text-2xl font-semibold">
-            Confirm your booking
-          </h2>
+          <h2 className="mt-2 text-2xl font-semibold">Confirm your booking</h2>
           <p className="mt-3 text-sm leading-6 text-white/65">
             Everything here is designed to stay simple: add your email, choose
             seats, and confirm when it feels right.
@@ -162,6 +161,25 @@ const BookingForm = ({ movieId, movieTitle }: BookingFormProps) => {
           </div>
         </div>
 
+        <div className="text-black">
+          <input
+            type="date"
+            name="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <select name="time">
+            <option value="07:00">7:00 AM</option>
+            <option value="09:00">9:00 AM</option>
+            <option value="11:00">11:00 AM</option>
+            <option value="13:00">1:00 PM</option>
+            <option value="15:00">3:00 PM</option>
+            <option value="17:00">5:00 PM</option>
+            <option value="19:00">7:00 PM</option>
+            <option value="21:00">9:00 PM</option>
+          </select>
+        </div>
+
         <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-end">
           <div className="rounded-[1.6rem] border border-white/8 bg-white/5 p-4 sm:p-5">
             <p className="text-xs uppercase tracking-[0.22em] text-white/45">
@@ -178,9 +196,7 @@ const BookingForm = ({ movieId, movieTitle }: BookingFormProps) => {
                   </span>
                 ))
               ) : (
-                <p className="text-sm text-white/55">
-                  No seats selected yet.
-                </p>
+                <p className="text-sm text-white/55">No seats selected yet.</p>
               )}
             </div>
             <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-white/8 pt-4">

@@ -1,10 +1,10 @@
 import { Ticket } from "lucide-react";
 import Link from "next/link";
-import { getBooking } from "../actions/booking";
+import { getUserBookings } from "../actions/booking";
 import MyTickets from "../components/MyTickets";
 
 export default async function BookedTicketsPage() {
-  const { data, error } = await getBooking();
+  const { data, error } = await getUserBookings();
 
   if (error) {
     return (
@@ -48,8 +48,7 @@ export default async function BookedTicketsPage() {
             Browse more movies
           </Link>
         </div>
-
-      <MyTickets bookings={data || []} />
+        <MyTickets bookings={data || []} />
       </section>
     </main>
   );

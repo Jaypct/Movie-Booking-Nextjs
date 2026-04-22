@@ -51,8 +51,22 @@ CREATE TABLE IF NOT EXISTS bookings (
         ),
     seat TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT NOW(),
-    unique(movie_id, seat)
+    schedule_id UUID REFERENCES schedules(id) ON DELETE CASCADE;
+    qr_token text unique,
+    status text NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'used', "expired")),
+    unique(schedule_id, seat)
 );
+
+CREATE TABLE schedules (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  movie_id INTEGER NOT NULL,
+  show_date DATE NOT NULL,
+  show_time TIME NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+ALTER TABLE bookings
+ADD COLUMN schedule_id UUID REFERENCES schedules(id) ON DELETE CASCADE;
 
 -- create index for faster queries
 create index if not exists idx_bookings_movie_id on bookings(movie_id);
@@ -74,6 +88,11 @@ CREATE POLICY "Users can create bookings"
     ON bookings
     FOR INSERT
     WITH CHECK(auth.uid() = user_id);
+
+create policy "Users can view own profile"
+on profiles
+for select
+using (auth.uid() = id);
 
 -- POLICY: ADMIN CAN VIEW ALL BOOKINGS
 CREATE POLICY "Admins can view all bookings"

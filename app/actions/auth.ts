@@ -49,3 +49,33 @@ export const signout = async () => {
   revalidatePath("/", "layout");
   redirect("/login");
 };
+
+export const getUserData = async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return {
+      isAuthenticated: false,
+      userName: "User",
+      role: null,
+    };
+  }
+
+  const userName = user.user_metadata?.name || "User";
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", user?.id)
+    .single();
+
+  return {
+    isAuthenticated: true,
+    userName,
+    role: profile?.role,
+  };
+};

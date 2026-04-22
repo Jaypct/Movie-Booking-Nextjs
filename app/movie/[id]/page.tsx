@@ -71,7 +71,7 @@ export default async function MoviePage(props: PageProps<"/movie/[id]">) {
                 {truncate(
                   movie.overview ||
                     "A cinematic story ready for your next movie night.",
-                  360
+                  360,
                 )}
               </p>
             </div>

@@ -1,5 +1,5 @@
 import { Movie } from "../types/movie";
-import MovieCard from "../components/MovieCard";
+import HomeMovieCard from "../components/HomeMovieCard";
 
 interface Props {
   searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,21 +16,22 @@ export default async function SearchPage({ searchParams }: Props) {
 
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/movies/search?query=${encodeURIComponent(query)}`,
-    { next: { revalidate: 60 } }, // optional caching
+    { next: { revalidate: 60 } },
   );
 
-  const data: { results: Movie[] } = await res.json();
-
-  if (!data.results || data.results.length === 0) {
+  if (!res.ok) {
+    // optional: handle specific status codes
     return (
       <p className="mt-20 text-center">{`No results found for "${query}"`}</p>
     );
   }
 
+  const data: { results: Movie[] } = await res.json();
+
   return (
     <div className="container mx-auto mt-20 grid grid-cols-2 md:grid-cols-4 gap-4">
       {data.results.map((movie) => (
-        <MovieCard key={movie.id} movie={movie} />
+        <HomeMovieCard key={movie.id} movie={movie} />
       ))}
     </div>
   );

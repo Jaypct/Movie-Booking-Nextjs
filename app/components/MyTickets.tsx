@@ -3,48 +3,15 @@ import { CalendarDays, Film, Mail, Ticket, WalletCards } from "lucide-react";
 import Link from "next/link";
 import { Booking } from "../types/database";
 import { formatDateTime } from "../lib/utils";
+import { useEffect, useState } from "react";
+import QRCode from "qrcode";
 
 interface MyTicketsProps {
   bookings: Booking[];
 }
 
 const MyTickets = ({ bookings }: MyTicketsProps) => {
-  const groupedBookings = bookings.reduce<
-    Array<{
-      id: string;
-      movieId: string;
-      movieTitle: string;
-      email: string;
-      createdAt: string;
-      seats: string[];
-    }>
-  >((groups, booking) => {
-    const existingGroup = groups.find(
-      (group) =>
-        group.movieId === String(booking.movie_id) &&
-        group.movieTitle === booking.movie_title &&
-        group.email === booking.email &&
-        group.createdAt === booking.created_at,
-    );
-
-    if (existingGroup) {
-      existingGroup.seats.push(booking.seat);
-      return groups;
-    }
-
-    groups.push({
-      id: booking.id,
-      movieId: String(booking.movie_id),
-      movieTitle: booking.movie_title,
-      email: booking.email,
-      createdAt: booking.created_at,
-      seats: [booking.seat],
-    });
-
-    return groups;
-  }, []);
-
-  if (!groupedBookings.length) {
+  if (!bookings.length) {
     return (
       <div className="section-shell rounded-[2rem] p-8 sm:p-10">
         <div className="mx-auto max-w-2xl text-center">
@@ -67,7 +34,7 @@ const MyTickets = ({ bookings }: MyTicketsProps) => {
 
   return (
     <div className="grid gap-5 lg:grid-cols-2">
-      {groupedBookings.map((booking) => (
+      {bookings.map((booking) => (
         <article
           key={booking.id}
           className="section-shell overflow-hidden rounded-[2rem]"
@@ -79,7 +46,7 @@ const MyTickets = ({ bookings }: MyTicketsProps) => {
                   Confirmed booking
                 </p>
                 <h2 className="mt-3 text-2xl font-semibold">
-                  {booking.movieTitle}
+                  {booking.movie_title}
                 </h2>
               </div>
               <span className="chip text-sm">Active ticket</span>
@@ -92,14 +59,9 @@ const MyTickets = ({ bookings }: MyTicketsProps) => {
                   Seats
                 </p>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  {booking.seats.map((seat) => (
-                    <span
-                      key={seat}
-                      className="rounded-full border border-emerald-400/20 bg-emerald-400/15 px-3 py-1.5 text-sm font-medium text-emerald-200"
-                    >
-                      {seat}
-                    </span>
-                  ))}
+                  <span className="rounded-full border border-emerald-400/20 bg-emerald-400/15 px-3 py-1.5 text-sm font-medium text-emerald-200">
+                    {booking.seat}
+                  </span>
                 </div>
               </div>
 
@@ -109,8 +71,9 @@ const MyTickets = ({ bookings }: MyTicketsProps) => {
                   Booked on
                 </p>
                 <p className="mt-3 text-sm font-medium text-white">
-                  {formatDateTime(booking.createdAt)}
+                  {formatDateTime(booking.created_at)}
                 </p>
+                <p>{formatDateTime(booking.schedules?.show_date ?? "")}</p>
               </div>
             </div>
 
@@ -131,7 +94,7 @@ const MyTickets = ({ bookings }: MyTicketsProps) => {
                   Route
                 </p>
                 <Link
-                  href={`/movie/${booking.movieId}`}
+                  href={`/movie/${booking.movie_id}`}
                   className="mt-3 inline-flex text-sm font-medium text-white underline underline-offset-4"
                 >
                   View movie page
@@ -139,6 +102,10 @@ const MyTickets = ({ bookings }: MyTicketsProps) => {
               </div>
             </div>
           </div>
+          <Link href={`/booked-tickets/${booking.id}`}>
+            {" "}
+            <button className="">View More Details</button>
+          </Link>
         </article>
       ))}
     </div>
